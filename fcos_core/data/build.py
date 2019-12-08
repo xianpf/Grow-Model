@@ -24,7 +24,7 @@ def build_dataset(dataset_list, transforms, dataset_catalog, is_train=True):
             construct a dataset.
         is_train (bool): whether to setup the dataset for training or testing
     """
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     if not isinstance(dataset_list, (list, tuple)):
         raise RuntimeError(
             "dataset_list should be a list of strings, got {}".format(dataset_list)
@@ -86,7 +86,7 @@ def _compute_aspect_ratios(dataset):
 def make_batch_data_sampler(
     dataset, sampler, aspect_grouping, images_per_batch, num_iters=None, start_iter=0
 ):
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     # 这里应该是把长宽比按照<1 >1分成两拨, 为了保证同个batch都是长>宽或宽>长
     if aspect_grouping:
         if not isinstance(aspect_grouping, (list, tuple)):
@@ -159,7 +159,7 @@ def make_data_loader(cfg, is_train=True, is_distributed=False, start_iter=0):
 
     data_loaders = []
     for dataset in datasets:
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         sampler = make_data_sampler(dataset, shuffle, is_distributed)
         batch_sampler = make_batch_data_sampler(
             dataset, sampler, aspect_grouping, images_per_gpu, num_iters, start_iter

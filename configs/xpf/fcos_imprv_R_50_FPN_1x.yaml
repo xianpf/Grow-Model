@@ -231,15 +231,15 @@ MODEL:
   RPN_ONLY: true
   USE_SYNCBN: false
   WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
-OUTPUT_DIR: training_dir/fcos_imprv_R_50_FPN_1x/ep_lr0_001_1912061649
+OUTPUT_DIR: run/fcos_imprv_R_50_FPN_1x/lr1en4_191208
 PATHS_CATALOG: /home/xianr/TurboRuns/FCOS/fcos_core/config/paths_catalog.py
 SOLVER:
-  BASE_LR:  0.001  # 0.01
+  BASE_LR: 1e-4  # 0.001  # 0.01
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
   DCONV_OFFSETS_LR_FACTOR: 1.0
   GAMMA: 0.1
-  IMS_PER_BATCH: 3
+  IMS_PER_BATCH: 4
   MAX_ITER: 90000
   MOMENTUM: 0.9
   STEPS:
