@@ -31,6 +31,8 @@ class Conv2d(torch.nn.Conv2d):
         if x.numel() > 0:
             return super(Conv2d, self).forward(x)
         # get output shape
+        print('\n\n\n\n\n\nLook! Zero numer for in put! [xpf]')
+        import pdb; pdb.set_trace()
 
         output_shape = [
             (i + 2 * p - (di * (k - 1) + 1)) // d + 1
