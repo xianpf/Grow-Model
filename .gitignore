@@ -30,3 +30,4 @@ dist/
 /models
 /training_dir
 /run
+/.vscode
