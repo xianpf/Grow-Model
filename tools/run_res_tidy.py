@@ -83,13 +83,20 @@ def main():
     if (target_dir + '/run_res_tidy') in dir_files:
         import pdb; pdb.set_trace()
         pass
+    assert (target_dir + '/new_config.yml') in dir_files, "Error! No cfg file found! check if the dir is right."
     cfg_file = target_dir + '/new_config.yml' if (target_dir + '/new_config.yml') in dir_files else None
     model_files = [f for f in dir_files if f.endswith('00.pth') and 'model_' in f]
 
     cfg.merge_from_file(cfg_file)
     cfg.freeze()
 
-    test_str = ''
+
+    logger = setup_logger("fcos_core", target_dir + '/run_res_tidy', get_rank(), filename="test_log.txt")
+    logger.info(cfg)
+
+
+
+    # test_str = ''
 
     model = build_detection_model(cfg)
     model.to(cfg.MODEL.DEVICE)
@@ -129,16 +136,19 @@ def main():
             output_folder=output_folder,
         )
         summaryStrs = get_neat_inference_result(inference_result[2][0])
-        test_str += '\n'+ output_folder.split('/')[-1]+   \
-            '\n'.join(summaryStrs)
+        # test_str += '\n'+ output_folder.split('/')[-1]+   \
+        #     '\n'.join(summaryStrs)
+        logger.info(output_folder.split('/')[-1])
+        logger.info('\n'.join(summaryStrs))
 
 
 
 
 
 
-    with open(target_dir + '/run_res_tidy/test_log.txt', 'w') as f:
-        f.write(test_str)
+
+    # with open(target_dir + '/run_res_tidy/test_log.txt', 'w') as f:
+    #     f.write(test_str)
 
 if __name__ == "__main__":
     main()
