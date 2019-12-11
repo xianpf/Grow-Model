@@ -6,12 +6,11 @@ from fcos_core.modeling.detector import build_detection_model
 from fcos_core.utils.checkpoint import DetectronCheckpointer
 from fcos_core.data import make_data_loader
 from fcos_core.engine.inference import inference
-
-
+from fcos_core.utils.logger import setup_logger
+import numpy as np
 
 
 def get_neat_inference_result(coco_eval):
-    import numpy as np
     def _summarize( ap=1, iouThr=None, areaRng='all', maxDets=100 ):
         p = coco_eval.params
         # import pdb; pdb.set_trace()
@@ -83,6 +82,7 @@ def main():
     if (target_dir + '/run_res_tidy') in dir_files:
         import pdb; pdb.set_trace()
         pass
+    os.makedirs(target_dir + '/run_res_tidy')
     assert (target_dir + '/new_config.yml') in dir_files, "Error! No cfg file found! check if the dir is right."
     cfg_file = target_dir + '/new_config.yml' if (target_dir + '/new_config.yml') in dir_files else None
     model_files = [f for f in dir_files if f.endswith('00.pth') and 'model_' in f]
@@ -90,11 +90,8 @@ def main():
     cfg.merge_from_file(cfg_file)
     cfg.freeze()
 
-
-    logger = setup_logger("fcos_core", target_dir + '/run_res_tidy', get_rank(), filename="test_log.txt")
+    logger = setup_logger("fcos_core", target_dir + '/run_res_tidy', 0, filename="test_log.txt")
     logger.info(cfg)
-
-
 
     # test_str = ''
 
@@ -123,7 +120,8 @@ def main():
         _ = checkpointer.load(model_f)
         output_folder = target_dir+'/run_res_tidy/'+dataset_name+'_'+(model_f.split('/')[-1][:-4])
         os.makedirs(output_folder)
-        print('Processing {}/{}: {}'.format(i, len(model_f), output_folder))
+        logger.info('Processing {}/{}: {}'.format(i, len(model_f), output_folder))
+        # print('Processing {}/{}: {}'.format(i, len(model_f), output_folder))
         inference_result = inference(
             model,
             data_loader_val,
@@ -140,12 +138,6 @@ def main():
         #     '\n'.join(summaryStrs)
         logger.info(output_folder.split('/')[-1])
         logger.info('\n'.join(summaryStrs))
-
-
-
-
-
-
 
     # with open(target_dir + '/run_res_tidy/test_log.txt', 'w') as f:
     #     f.write(test_str)
