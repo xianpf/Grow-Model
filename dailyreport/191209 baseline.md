@@ -6,7 +6,7 @@
 - 
 # 实验结果
 - ## FCOS 自己报告的最好的结果和提供模型测试结果
-  - train_batch_size = 4
+  - train_batch_size = 16
   - test_batch_size = 2
   - lr = 0.01
   - 结果：
@@ -27,7 +27,7 @@
   - lcation: "run/downloaded FCOS" 
 - ## 原原本本的代码跑出来
   - 因为GPU显存不够，没办法跑
-  - train_batch_size = 4
+  - train_batch_size = 16
   - test_batch_size = 2
   - lr = 0.01
 - ## 源代码修改batch size 和 lr
