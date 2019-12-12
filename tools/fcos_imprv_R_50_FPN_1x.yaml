@@ -230,11 +230,11 @@ MODEL:
     USE_FPN: false
   RPN_ONLY: true
   USE_SYNCBN: false
-  WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
+  # WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
   # WEIGHT: run/downloaded FCOS/FCOS_imprv_R_50_FPN_1x.pth
-  # WEIGHT: ""    # catalog://ImageNetPretrained/MSRA/R-50
-# OUTPUT_DIR: run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_191211
-OUTPUT_DIR: run/try
+  WEIGHT: ""
+OUTPUT_DIR: run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_fbn_scratch_191212
+# OUTPUT_DIR: run/try
 PATHS_CATALOG: fcos_core/config/paths_catalog.py
 SOLVER:
   BASE_LR: 5e-3  # 0.001  # 0.01
