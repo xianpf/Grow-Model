@@ -1,5 +1,4 @@
 MANIFEST.in
-README.md
 setup.py
 setup_nms_C.py
 fcos/__init__.py
@@ -76,6 +75,7 @@ fcos_core/engine/__init__.py
 fcos_core/engine/bbox_aug.py
 fcos_core/engine/inference.py
 fcos_core/engine/trainer.py
+fcos_core/engine/trainer_test_at_save.py
 fcos_core/layers/__init__.py
 fcos_core/layers/_utils.py
 fcos_core/layers/batch_norm.py
@@ -106,6 +106,7 @@ fcos_core/modeling/backbone/fbnet.py
 fcos_core/modeling/backbone/fbnet_builder.py
 fcos_core/modeling/backbone/fbnet_modeldef.py
 fcos_core/modeling/backbone/fpn.py
+fcos_core/modeling/backbone/growresnext.py
 fcos_core/modeling/backbone/mobilenet.py
 fcos_core/modeling/backbone/resnet.py
 fcos_core/modeling/detector/__init__.py
