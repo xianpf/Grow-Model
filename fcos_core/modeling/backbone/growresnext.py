@@ -248,7 +248,8 @@ class GrowResNeXtBottleneck(nn.Module):
 
     def adult_ceremony(self):
         # - 把embryo导入adults， 尽可能保持adults neat
-        available_space = torch.where(self.adults_occupied == 0)[0]
+        # available_space = torch.where(self.adults_occupied == 0)[0]
+        available_space = torch.nonzero(self.adults_occupied == 0).squeeze(1)
         if len(available_space):
             cell_idx = int(available_space[0])
             cell_from = self.embryo_channels * cell_idx
