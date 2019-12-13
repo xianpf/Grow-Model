@@ -94,7 +94,24 @@
 - ## 源代码修改batch size 和 lr后from scratch
   - train_batch_size = 4
   - test_batch_size = 2
-  - lr = 0.01
+  - lr = 5e-3
+  - 结果：
+    ```python
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.113
+        Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.193
+        Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.114
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.060
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.121
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.159
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.177
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.305
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.320
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.140
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.329
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.479   
+    ```
+  - lcation: "run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_fbn_scratch_191212" 
+
 
 
 - ## 源代码修改batch size 和 lr后from scratch， 并把FrosenBN改为BN
@@ -105,3 +122,18 @@
 # 最后搞一个☑️的表格
 
 # 最重要还是要回归mask，测试它们的mask表现
+
+
+# 意识世界的维度可能是无穷多的，我们一般使用有限数量的，预定义的维度来加以模拟
+## 一个关键的点是，我们应该只使用最多固定数量8个维度来表示真实世界维度的一个视图view
+## 最核心的问题在于
+- 新维度的发现机制
+- 不同agent的不同维度的统一，合并机制，好互相交流，模拟人类语言、手势协议的过程
+- 最终有个library（知识图谱）来统一合并这些视图，从而尽可能地模拟真实世界，
+
+## 一些思维碎片
+- 优越感score 长生
+- 优越感的各子维度如何产生，随机？
+- 一个地主是一个原始维度，多个地主的主成分分析和因子分析造就抽象地主👲
+- 正负的调整幅度不一致，正向快，负向慢， 结合丛林法则筛选
+- [ ] 自我归因
