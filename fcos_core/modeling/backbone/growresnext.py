@@ -235,6 +235,16 @@ class GrowResNeXtBottleneck(nn.Module):
         self.adults_conv2.weight.data.zero_()
         self.adults_conv3.weight.data.zero_()
 
+    def jungle_law(self):
+        filter_weight = self.adults_conv3.weight.data.squeeze(2).squeeze(2).pow(2)\
+            .sum(dim=0).sqrt().view(self.adults_volume, self.embryo_channels)
+        adult_weight = filter_weight.sum(dim=1)
+        die_out = adult_weight.argmin()
+        self.adults_bns[die_out] = None
+        self.adults_occupied[die_out] = 0
+
+        return die_out
+
 
     def adult_ceremony(self):
         # - 把embryo导入adults， 尽可能保持adults neat
@@ -244,7 +254,12 @@ class GrowResNeXtBottleneck(nn.Module):
             cell_from = self.embryo_channels * cell_idx
             cell_end = self.embryo_channels * (cell_idx + 1)
         else:
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
+            self.embryo_grow_tic_threshold = 10
+            cell_idx = self.jungle_law()
+            cell_from = self.embryo_channels * cell_idx
+            cell_end = self.embryo_channels * (cell_idx + 1)
+
         self.adults_conv1.weight.data[cell_from:cell_end] = self.embryo_conv1.weight.data
         self.adults_conv2.weight.data[cell_from:cell_end, cell_from:cell_end] = self.embryo_conv2.weight.data
         self.adults_conv3.weight.data[:,cell_from:cell_end] = self.embryo_conv3.weight.data
@@ -255,7 +270,7 @@ class GrowResNeXtBottleneck(nn.Module):
             print("Error! self.adults_bns[{}] is not None.".format([cell_idx]))
             import pdb; pdb.set_trace()
         self.adults_bns[cell_idx] = [self.embryo_bn1, self.embryo_bn2, self.embryo_bn3]
-        print('Ids:', id(self.adults_bns[cell_idx][0]), id(self.adults_bns[cell_idx][1]), id(self.adults_bns[cell_idx][2]))
+        # print('Ids:', id(self.adults_bns[cell_idx][0]), id(self.adults_bns[cell_idx][1]), id(self.adults_bns[cell_idx][2]))
 
         # - embryo 恢复到初始状态
         self.embryo_conv1.load_state_dict(self.embryo_init_reserve['embryo_conv1'])
@@ -264,8 +279,9 @@ class GrowResNeXtBottleneck(nn.Module):
         self.embryo_bn1.load_state_dict(self.embryo_init_reserve['embryo_bn1'])
         self.embryo_bn2.load_state_dict(self.embryo_init_reserve['embryo_bn2'])
         self.embryo_bn3.load_state_dict(self.embryo_init_reserve['embryo_bn3'])
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # - 探讨 8个embryo的关系，它们是一个整体，还是各自独立，或是其他
+        self.adults_occupied[cell_idx] = 1
 
 
     def adults_apply_bn(self, x, layer):
@@ -274,7 +290,11 @@ class GrowResNeXtBottleneck(nn.Module):
             # import pdb; pdb.set_trace()
             idx_from, idx_end = self.embryo_channels * i, self.embryo_channels * (i + 1)
             if adult_bn:
-                import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
+                if layer <= 2:
+                    x_bn[:,idx_from:idx_end,:,:] = adult_bn[layer-1](x[:,idx_from:idx_end,:,:])
+                else:
+                    x_bn = adult_bn[layer-1](x)
             else:
                 x_bn[:,idx_from:idx_end,:,:] = x[:,idx_from:idx_end,:,:]
         return x_bn
@@ -661,10 +681,41 @@ class BottleneckWithFixedBatchNorm(Bottleneck):
         )
 
 
+class BottleneckWithBatchNorm(Bottleneck):
+    def __init__(
+        self,
+        in_channels,
+        bottleneck_channels,
+        out_channels,
+        num_groups=1,
+        stride_in_1x1=True,
+        stride=1,
+        dilation=1,
+        dcn_config=None
+    ):
+        super(BottleneckWithBatchNorm, self).__init__(
+            in_channels=in_channels,
+            bottleneck_channels=bottleneck_channels,
+            out_channels=out_channels,
+            num_groups=num_groups,
+            stride_in_1x1=stride_in_1x1,
+            stride=stride,
+            dilation=dilation,
+            norm_func=nn.BatchNorm2d,
+            dcn_config=dcn_config
+        )
+
+
 class StemWithFixedBatchNorm(BaseStem):
     def __init__(self, cfg):
         super(StemWithFixedBatchNorm, self).__init__(
             cfg, norm_func=FrozenBatchNorm2d
+        )
+
+class StemWithBatchNorm(BaseStem):
+    def __init__(self, cfg):
+        super(StemWithBatchNorm, self).__init__(
+            cfg, norm_func=nn.BatchNorm2d
         )
 
 
@@ -700,11 +751,13 @@ class StemWithGN(BaseStem):
 
 _TRANSFORMATION_MODULES = Registry({
     "BottleneckWithFixedBatchNorm": BottleneckWithFixedBatchNorm,
+    "BottleneckWithBatchNorm": BottleneckWithBatchNorm,
     "BottleneckWithGN": BottleneckWithGN,
 })
 
 _STEM_MODULES = Registry({
     "StemWithFixedBatchNorm": StemWithFixedBatchNorm,
+    "StemWithBatchNorm": StemWithBatchNorm,
     "StemWithGN": StemWithGN,
 })
 
