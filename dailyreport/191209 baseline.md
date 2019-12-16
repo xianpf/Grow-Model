@@ -155,6 +155,27 @@
   - lcation: "run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_bn_scratch_nofreeze_191213" 
 
 
+  - MODEL.BACKBONE.FREEZE_CONV_BODY_AT: -1
+  - train_batch_size = 4
+  - test_batch_size = 2
+  - lr = 5e-2
+  - 结果：
+    ```python
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+        Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+        Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+        Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.001
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.002
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.001
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.002
+        Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.003
+    ```
+  - lcation: "run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_bn_scratch_nofreeze_191213" 
+
 - ## 源代码修改batch size 和 lr后from scratch， 并把FrosenBN改为BN
   - train_batch_size = 4
   - test_batch_size = 2

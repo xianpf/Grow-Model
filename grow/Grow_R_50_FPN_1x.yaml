@@ -236,7 +236,7 @@ MODEL:
   # WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
   # WEIGHT: run/downloaded FCOS/FCOS_imprv_R_50_FPN_1x.pth
   WEIGHT: ""
-OUTPUT_DIR: run/grow_R_50_FPN_1x/Try_lr1en4_bn_scratch_191212
+OUTPUT_DIR: run/grow_R_50_FPN_1x/Try_lr1en4_bn_embryox2_scratch_191216
 # OUTPUT_DIR: run/try
 PATHS_CATALOG: fcos_core/config/paths_catalog.py
 SOLVER:
@@ -246,6 +246,8 @@ SOLVER:
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
   DCONV_OFFSETS_LR_FACTOR: 1.0
+  EMBRYO_LR_FACTOR: 2
+  EMBRYO_WEIGHT_DECAY_FACTOR: 1
   GAMMA: 0.1
   IMS_PER_BATCH: 4
   MAX_ITER: 90000

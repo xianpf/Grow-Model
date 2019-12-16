@@ -79,13 +79,15 @@ def main():
     # import pdb; pdb.set_trace()
     target_dir = args.run_dir
     dir_files = sorted(glob.glob(target_dir+'/*'))
-    if (target_dir + '/run_res_tidy') in dir_files:
-        import pdb; pdb.set_trace()
-        pass
-    os.makedirs(target_dir + '/run_res_tidy')
     assert (target_dir + '/new_config.yml') in dir_files, "Error! No cfg file found! check if the dir is right."
     cfg_file = target_dir + '/new_config.yml' if (target_dir + '/new_config.yml') in dir_files else None
     model_files = [f for f in dir_files if f.endswith('00.pth') and 'model_' in f]
+    tidyed_before = (target_dir + '/run_res_tidy') in dir_files
+    if tidyed_before:
+        import pdb; pdb.set_trace()
+        pass
+    else:
+        os.makedirs(target_dir + '/run_res_tidy')
 
     cfg.merge_from_file(cfg_file)
     cfg.freeze()

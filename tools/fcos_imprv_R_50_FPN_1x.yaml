@@ -236,11 +236,11 @@ MODEL:
   # WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
   # WEIGHT: run/downloaded FCOS/FCOS_imprv_R_50_FPN_1x.pth
   WEIGHT: ""
-OUTPUT_DIR: run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_bn_scratch_nofreeze_191213
+OUTPUT_DIR: run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en2_scratch_191214
 # OUTPUT_DIR: run/try
 PATHS_CATALOG: fcos_core/config/paths_catalog.py
 SOLVER:
-  BASE_LR: 5e-3  # 0.001  # 0.01
+  BASE_LR: 5e-2  # 0.001  # 0.01
   # BASE_LR: 1e-3  # 0.001  # 0.01
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
