@@ -6,9 +6,8 @@ DATASETS:
   TEST:
   - coco_2014_minival
   TRAIN:
-  - coco_2014_minival
   # - coco_2014_train
-  # - coco_2014_valminusminival
+  - coco_2014_valminusminival
 INPUT:
   MAX_SIZE_TEST: 1333
   MAX_SIZE_TRAIN: 1333
@@ -29,11 +28,12 @@ INPUT:
   TO_BGR255: true
 MODEL:
   BACKBONE:
-    CONV_BODY: R-50-FPN-RETINANET
-    FREEZE_CONV_BODY_AT: 2
+    CONV_BODY: R-50-FPN-GROW
+    FREEZE_CONV_BODY_AT: -1
+    # FREEZE_CONV_BODY_AT: 2
     USE_GN: false
   CLS_AGNOSTIC_BBOX_REG: false
-  DEVICE: cpu # cuda
+  DEVICE: cpu
   FBNET:
     ARCH: default
     ARCH_DEF: ''
@@ -95,10 +95,12 @@ MODEL:
     - false
     - false
     - false
-    STEM_FUNC: StemWithFixedBatchNorm
+    STEM_FUNC: StemWithBatchNorm
+    # STEM_FUNC: StemWithFixedBatchNorm
     STEM_OUT_CHANNELS: 64
     STRIDE_IN_1X1: true
-    TRANS_FUNC: BottleneckWithFixedBatchNorm
+    TRANS_FUNC: BottleneckWithBatchNorm
+    # TRANS_FUNC: BottleneckWithFixedBatchNorm
     WIDTH_PER_GROUP: 64
     WITH_MODULATED_DCN: false
   RETINANET:
@@ -231,13 +233,16 @@ MODEL:
     USE_FPN: false
   RPN_ONLY: true
   USE_SYNCBN: false
-  # WEIGHT: ""
-  WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
-# OUTPUT_DIR: run/grow_R_50_FPN_1x/try191208
-OUTPUT_DIR: run/try_1
+  # WEIGHT: catalog://ImageNetPretrained/MSRA/R-50
+  # WEIGHT: run/downloaded FCOS/FCOS_imprv_R_50_FPN_1x.pth
+  WEIGHT: ""
+OUTPUT_DIR: run/combo_R_50_FPN_1x/Try_lr1en4_scratch_191216
+# OUTPUT_DIR: run/try
 PATHS_CATALOG: fcos_core/config/paths_catalog.py
 SOLVER:
-  BASE_LR:  0.001  # 0.01
+  BASE_LR: 1e-4  # 0.001  # 0.01
+  # BASE_LR: 5e-3  # 0.001  # 0.01
+  # BASE_LR: 1e-3  # 0.001  # 0.01
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
   DCONV_OFFSETS_LR_FACTOR: 1.0
