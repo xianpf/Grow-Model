@@ -131,6 +131,9 @@ def do_train(
             )
         if iteration % checkpoint_period == 0:
             checkpointer.save("model_{:07d}".format(iteration), **arguments)
+            # import pdb; pdb.set_trace()
+            run_test(cfg, model, distributed=False, test_epoch=iteration)
+            model.train()
         if iteration == max_iter:
             checkpointer.save("model_final", **arguments)
 
@@ -252,7 +255,7 @@ def get_neat_inference_result(coco_eval):
     stats, summaryStrs = _summarizeDets()
     return summaryStrs
 
-def run_test(cfg, model, distributed):
+def run_test(cfg, model, distributed, test_epoch=None):
     if distributed:
         model = model.module
     torch.cuda.empty_cache()  # TODO check if it helps
@@ -285,14 +288,18 @@ def run_test(cfg, model, distributed):
         # import pdb; pdb.set_trace()
         summaryStrs = get_neat_inference_result(inference_result[2][0])
         # print('\n'.join(summaryStrs))
-        with open(output_folder+'/summaryStrs.txt', 'w') as f_summaryStrs:
-            f_summaryStrs.write('\n'.join(summaryStrs))
+        summaryStrFinal = '\n'.join(summaryStrs)
+        summaryStrFinal = '\n\nEpoch: ' + str(test_epoch) + '\n' + summaryStrFinal
+        # with open(output_folder+'/summaryStrs.txt', 'w') as f_summaryStrs:
+        with open(output_folder+'/summaryStrs.txt', 'a') as f_summaryStrs:
+            f_summaryStrs.write(summaryStrFinal)
 
 def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",
         default="tools/fcos_imprv_R_50_FPN_1x.yaml",
+        # default="run/fcos_imprv_R_50_FPN_1x/Baseline_lr5en3_191211/new_config.yml",
         metavar="FILE",
         help="path to config file",
         type=str,
@@ -325,6 +332,7 @@ def main():
 
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
+    # cfg.merge_from_list(['OUTPUT_DIR', 'run/fcos_imprv_R_50_FPN_1x/vals_1'])
     cfg.freeze()
 
     output_dir = cfg.OUTPUT_DIR
